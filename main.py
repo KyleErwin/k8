@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from src.models import IntroductionRequest, IntroductionResponse
 
 app = FastAPI()
