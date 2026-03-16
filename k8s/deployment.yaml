@@ -26,13 +26,13 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /hello
+              path: /health
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /hello
+              path: /health
               port: 8000
             initialDelaySeconds: 3
             periodSeconds: 5
