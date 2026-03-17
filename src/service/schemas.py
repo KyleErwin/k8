@@ -51,28 +51,27 @@ class PredictionRequest(BaseModel):
     default: bool
     housing: bool
     loan: bool
-    campaign: int
-    previous_campaign: int
+    campaign: int = Field(..., ge=1)
     job: JobEnum
     marital: MaritalEnum
     education: EducationEnum
+    previous: int = Field(..., ge=1)
     pcontacted: PreviouslyContactedEnum
     poutcome: PreviousCampaignOutcomeEnum
 
     def to_model_input(self) -> dict:
-        # In hindsight, I should have renamed the columns in the cvs file
         return {
             "age": self.age,
-            "job": self.job.value,
-            "marital": self.marital.value,
-            "education": self.education.value,
-            "default": "yes" if self.default else "no",
             "balance": self.balance,
+            "default": int(self.default),
             "housing": int(self.housing),
             "loan": int(self.loan),
             "campaign": self.campaign,
+            "job": self.job.value,
+            "marital": self.marital.value,
+            "education": self.education.value,
             "pcontacted": self.pcontacted.value,
-            "previous": self.previous_campaign,
+            "previous": self.previous,
             "poutcome": self.poutcome.value,
         }
 
