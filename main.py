@@ -1,6 +1,6 @@
 import mlflow
-import pandas as pd
 import numpy as np
+import pandas as pd
 from fastapi import FastAPI
 
 from src.service.schemas import PredictionRequest, PredictionResponse

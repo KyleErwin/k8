@@ -1,4 +1,3 @@
-import random
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -6,19 +5,17 @@ import mlflow
 import numpy as np
 import pandas as pd
 from hyperopt import STATUS_OK, Trials, fmin, hp, tpe
-from hyperopt.base import Trials
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
 from mlflow.client import MlflowClient
-from mlflow.entities import Run
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler
 
-from src.training.utils import get_git_revision_short_hash, get_dvc_hash
+from src.training.utils import get_dvc_hash, get_git_revision_short_hash
 
 
 class BaseTuner(ABC):
@@ -171,7 +168,6 @@ class KNNTuner(BaseTuner):
     def create_pipeline(self, params: Dict[str, Any]) -> Pipeline:
         return Pipeline(
             [
-                # ("one_hot", OneHotEncoder(handle_unknown='ignore', sparse_output=False)),
                 ("smote", SMOTE(random_state=42)),
                 ("scaler", StandardScaler(with_mean=False)),
                 (
@@ -214,7 +210,6 @@ class NNTuner(BaseTuner):
     def create_pipeline(self, params: Dict[str, Any]) -> Pipeline:
         return Pipeline(
             [
-                # ("one_hot", OneHotEncoder(handle_unknown='ignore', sparse_output=False)),
                 ("smote", SMOTE(random_state=42)),
                 ("scaler", StandardScaler(with_mean=False)),
                 (
@@ -257,7 +252,6 @@ class RandomForestTuner(BaseTuner):
     def create_pipeline(self, params: Dict[str, Any]) -> Pipeline:
         return Pipeline(
             [
-                # ("one_hot", OneHotEncoder(handle_unknown='ignore', sparse_output=False)),
                 ("smote", SMOTE(random_state=42)),
                 (
                     "classifier",
