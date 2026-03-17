@@ -1,0 +1,5 @@
+[core]
+    remote = railway
+['remote "railway"']
+    url = s3://ergonomic-wardrobe-cuc54s/dvc-store
+    endpointurl = https://t3.storageapi.dev
