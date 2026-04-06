@@ -55,22 +55,30 @@ class PredictionRequest(BaseModel):
     job: JobEnum
     marital: MaritalEnum
     education: EducationEnum
-    previous: int = Field(..., ge=1)
-    pcontacted: PreviouslyContactedEnum
+    previous: int = Field(..., ge=0)
+    month: str
+    pdays: int = Field(..., ge=-1)
     poutcome: PreviousCampaignOutcomeEnum
 
     def to_model_input(self) -> dict:
+        import math
+        month_map = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6, 
+                     'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
+
         return {
             "age": self.age,
             "balance": self.balance,
+            "negative_balance": int(self.balance < 0),
             "default": int(self.default),
             "housing": int(self.housing),
             "loan": int(self.loan),
-            "campaign": self.campaign,
+            "campaign": math.log1p(self.campaign),
             "job": self.job.value,
             "marital": self.marital.value,
             "education": self.education.value,
-            "pcontacted": self.pcontacted.value,
+            "month": month_map.get(self.month.lower(), 5),
+            "was_contacted": int(self.pdays != -1),
+            "pdays": self.pdays,
             "previous": self.previous,
             "poutcome": self.poutcome.value,
         }
