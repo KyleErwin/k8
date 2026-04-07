@@ -1,12 +1,5 @@
-"""
-Data Science Showcase — Bank Marketing Prediction
-A Streamlit app highlighting every data science technique used in this project.
-"""
-
 import streamlit as st
 import requests
-from pathlib import Path
-from PIL import Image
 
 st.set_page_config(page_title="Bank Marketing")
 st.title("Bank Marketing")
@@ -118,7 +111,7 @@ if submitted:
         "poutcome": POUTCOME_OPTIONS[poutcome],
     }
 
-    API_URL = "http://127.0.0.1:8000"
+    API_URL = "https://mlflow-server-production-c6e7.up.railway.app/"
 
     with st.spinner("Getting prediction..."):
         try:

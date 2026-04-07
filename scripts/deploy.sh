@@ -7,12 +7,13 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-MANIFESTS_DIR="${REPO_ROOT}/ndbk-bmds"
+MANIFESTS_DIR="${REPO_ROOT}/k8s"
 IMAGE_TAG="${1:-}"
 NAMESPACE="ndbk-bmd-app"
 IMAGE_REPO="ghcr.io/kyleerwin/ndbk-bmd"
 
-echo "Applying ndbk-bmds manifests..."
+echo "Applying k8s manifests..."
+kubectl apply -f "${MANIFESTS_DIR}/namespace.yaml"
 kubectl apply -f "${MANIFESTS_DIR}/"
 
 if [[ -n "${IMAGE_TAG}" ]]; then

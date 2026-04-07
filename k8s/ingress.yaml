@@ -1,4 +1,4 @@
-apiVersion: networking.ndbk-bmds.io/v1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ndbk-bmd-app
@@ -11,7 +11,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - http:
+    - host: ndbk-bmd-app.local
+      http:
         paths:
           - path: /
             pathType: Prefix
