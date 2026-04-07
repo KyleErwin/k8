@@ -4,7 +4,7 @@ A machine learning application designed to predict which clients are likely to s
 
 ## Overview
 
-This project first preprocesses the bank marketing data and uses `dvc` to track the data. Hyperopt is used to tune the hyperparameters of the three models, namely K-Nearest Neighbors (`KNN`), Neural Networks (`NN`), and Random Forests (`RF`). MLflow is used to track the experiments and upload the best models to the MLflow Model Registry. The best model is then served using FastAPI. CI/CD pipelines are used to build, test and deploy the project. The project is hosted using [Railway](https://railway.app/) but can be deployed to a Kubernetes cluster.
+This project first preprocesses the bank marketing data and uses `dvc` to track the data. Optuna is used to tune the hyperparameters of the three models, namely K-Nearest Neighbors (`KNN`), Neural Networks (`NN`), and Random Forests (`RF`). MLflow is used to track the experiments and upload the best models to the MLflow Model Registry. The best model is then served using FastAPI. CI/CD pipelines are used to build, test and deploy the project. The project is hosted using [Railway](https://railway.app/) but can be deployed to a Kubernetes cluster.
 
 ## Setup & Installation
 
@@ -85,14 +85,14 @@ I used [python notebook](notebooks/analysis.ipynb) to explore the dataset and un
 - Identified variables that are only known after client contact, i.e., `post_campaign_action` and `duration`, which constitute as data leakage.
 - `month` (and by extension `day`) may be irrelevant since we may not always know when we will contact a client.
 
-I also used the notebook to visualize the data, test data transformations, and perform model training. Once I was happy with my understanding of the data, I used Hyperopt (a hyperparameter optimization library) to tune the hyperparameters for K-Nearest Neighbors (KNN), Neural Networks (NN), and Random Forests (RF). This code is contained in [src/training/tuner.py](src/training/tuner.py). [src/training/dataset.py](src/training/dataset.py) is used to preprocess the data for both training and testing. The tuner objects use scikit-learn pipelines to perform the data transformations and model training. These pipelines include SMOTE for oversampling, and a standard scaler. I could not get the one hot encoder to work with the pipeline, so I performed one hot encoding using pandas. The objective function for Hyperopt is to minimize the cross-validation error (using roc_auc_score). MLflow is used to track the experiments and upload the best models to the MLflow Model Registry. 
+I also used the notebook to visualize the data, test data transformations, and perform model training. Once I was happy with my understanding of the data, I used Optuna (a hyperparameter optimization library) to tune the hyperparameters for K-Nearest Neighbors (KNN), Neural Networks (NN), and Random Forests (RF). This code is contained in [src/training/tuner.py](src/training/tuner.py). [src/training/dataset.py](src/training/dataset.py) is used to preprocess the data for both training and testing. The tuner objects use scikit-learn pipelines to perform the data transformations and model training. These pipelines include SMOTE for oversampling, and a standard scaler. I could not get the one hot encoder to work with the pipeline, so I performed one hot encoding using pandas. The objective function for Optuna is to maximize the cross-validation error (using average precision). MLflow is used to track the experiments and upload the best models to the MLflow Model Registry. 
 
 To run the tuning process use
 ```
 uv run python tune.py --model all
 ```
 
-I found the Neural Network to be the best model, however it took the longest to make predictions. The KNN was the fastest to make predictions and was only slightly less accurate (with regard to roc_auc_score) than the Neural Network. For that reason, the service is deployed with the tuned KNN model. 
+I found the Neural Network to be the best model, however it took the longest to make predictions. The KNN was the fastest to make predictions and was only slightly less accurate (with regard to average precision) than the Neural Network. For that reason, the service is deployed with the tuned KNN model. 
 
 #### Discussion Points
 
